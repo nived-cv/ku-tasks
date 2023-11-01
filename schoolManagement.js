@@ -344,7 +344,7 @@ const toppers = ()=>{
     highestScore = Math.max(...markList)
 
     for(let i=0;i < markList.length;i++)
-    markList[i] == highestScore ? topper.push(studentList[i]):''
+    (markList[i] == highestScore ) && topper.push(studentList[i])
 
     console.log(topper,highestScore)
 }
@@ -366,9 +366,59 @@ const lowers = ()=>{
     console.log(lower,lowestScore)
 }
 
-const filterStudents = ()=>{
+const filterStudentsMinLimit = (mark_limit,sub)=>{
+    let count = 0
+    students.forEach( student => {
+        found = student.marks.find(subject => {
+            if(subject.subject == sub && subject.mark < mark_limit )
+            return true
+        })
+        found?count++:''
+    })
 
+    console.log(`number of students below ${mark_limit} in ${sub} : `,count)
 }
+
+const filterStudentsMaxLimit = (mark_limit,sub)=>{
+    let count = 0
+    students.forEach( student => {
+        found = student.marks.find(subject => {
+            if(subject.subject == sub && subject.mark > mark_limit )
+            return true
+        })
+        found?count++:''
+    })
+
+    console.log(`number of students above ${mark_limit} in ${sub} : `,count)
+}
+
+const filterStudentsByLowerLimit = (min_score) => {
+    let count = 0;
+    students.forEach((student) => {
+        found = student.marks.find((markDetails) => markDetails.mark < min_score)
+        found ? '' : count++
+    })
+
+    console.log(`number of students scored above ${min_score} in all`,count)
+}
+
+const filterStudentsByUpperLimit = (min_score) => {
+    let count = 0;
+    students.forEach((student) => {
+        found = student.marks.find((markDetails) => markDetails.mark > min_score)
+        found ? '' : count++
+    })
+
+    console.log(`number of students scored below ${min_score} in all`,count)
+}
+
+// const test = ()=>{
+//     students.forEach(student=>{
+//         console.log(Object.values(student.marks[0]))
+//     })
+// }
+// test()
+
 // function calls
 
 // printClassName()
@@ -397,3 +447,8 @@ const filterStudents = ()=>{
 // lowersByAvg()
 // toppers()
 // lowers()
+// filterStudentsMinLimit(30,"English")
+// filterStudentsMaxLimit(30,"English")
+//filterStudentsByLowerLimit(30)
+//filterStudentsByUpperLimit(45)
+//
