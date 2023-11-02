@@ -216,8 +216,14 @@ const subjectWithHighAvg = ()=>{
     console.log(maxSub)
 }
 
+const fetchSubs = () =>{
+    let subs = {}
+    students[0].marks.forEach((sub) => subs[sub.subject] = 0)
+    return subs
+}
+
 const totalMarkOfSubs = () =>{
-    const aggregate = {"English":0,"Maths":0,"Physics":0,"Chemistry":0,"Computer":0}
+    const aggregate = fetchSubs()
     students.forEach(student =>{
     student.marks.forEach( sub => aggregate[sub.subject] += sub.mark)
     })
@@ -548,8 +554,177 @@ const studentsWithLowestPercentIn = (sub) =>{
         percentList[i] == min_value && console.log(studentList[i])
 }
 
+const highestPercentageOf = (id) =>{
+    let student = students.find((student) => student.id == id)
+    let maximumMark = 50
+    let subjectList = []
+    let markList = []
+    student.marks.forEach(detail => subjectList.push(detail.subject))
+    student.marks.forEach(detail => markList.push(detail.mark))
+    markList.forEach((mark,idx) =>  markList[idx] = (mark/ maximumMark) * 100)
+    max_value = Math.max(...markList)
+    
+    for(let i = 0; i < markList.length ; i++)
+    markList[i] == max_value && console.log(subjectList[i])
+}
 
+const lowestPercentageOf = (id) =>{
+    let student = students.find((student) => student.id == id)
+    let maximumMark = 50
+    let subjectList = []
+    let markList = []
+    student.marks.forEach(detail => subjectList.push(detail.subject))
+    student.marks.forEach(detail => markList.push(detail.mark))
+    markList.forEach((mark,idx) =>  markList[idx] = (mark/ maximumMark) * 100)
+    min_value = Math.min(...markList)
+    
+    for(let i = 0; i < markList.length ; i++)
+    markList[i] == min_value && console.log(subjectList[i])
+}
 
+// const subjectsScoredAbove = (mark_lim) =>{
+
+//     let rawList = []
+//     students.forEach((student) => {
+//         found = student.marks.reduce((total,value) => value.mark > mark_lim ? total += value.subject : '','')
+//         rawList.push(found)
+//     })
+//     console.log(rawList)
+// }
+
+const subjectsScoredAbove = (mark_lim) =>{
+
+    let prev_array = []
+    students.forEach((student) => {
+        let res_array = student.marks.map(detail => detail.mark > mark_lim && detail.subject)
+        res_array = res_array.filter(item => typeof item == "string")
+
+        if(prev_array.length > 0)
+            prev_array.forEach((item,idx) => res_array.indexOf(item) == -1 ? prev_array[idx] = null : '')
+        else
+        prev_array = res_array
+    })
+    prev_array = prev_array.filter(item => item != null)
+
+    prev_array.length > 0 ? console.log(prev_array) : console.log('no subjects')
+}
+
+const subjectsScoredBelow = (mark_lim) =>{
+
+    let prev_array = []
+    students.forEach((student) => {
+        let res_array = student.marks.map(detail => detail.mark < mark_lim && detail.subject)
+        res_array = res_array.filter(item => typeof item == "string")
+
+        if(prev_array.length > 0)
+            prev_array.forEach((item,idx) => res_array.indexOf(item) == -1 ? prev_array[idx] = null : '')
+        else
+        prev_array = res_array
+    })
+    prev_array = prev_array.filter(item => item != null)
+
+    prev_array.length > 0 ? console.log(prev_array) : console.log('no subjects')
+}
+
+const averageMarksOfSubsAbove = (mark_lim) =>{
+    
+    totalMark = totalMarkOfSubs()
+    for(key in totalMark)
+        totalMark[key] = totalMark[key] / students.length
+    
+    for(key in totalMark)
+        totalMark[key] > mark_lim && console.log(key) 
+}
+
+const averageMarksOfSubsBelow = (mark_lim) =>{
+    
+    totalMark = totalMarkOfSubs()
+    for(key in totalMark)
+        totalMark[key] = totalMark[key] / students.length
+    
+    for(key in totalMark)
+        totalMark[key] < mark_lim && console.log(key) 
+}
+
+// creates an object-markList with subjects as keys and highest scores as values
+const topScoresOfEachSub = () =>{
+
+    let markList = fetchSubs()
+     students.forEach((student) => {
+         student.marks.forEach((detail)=>{
+             detail.mark > markList[detail.subject] ? markList[detail.subject] = detail.mark : ''
+         })
+     })
+     return markList
+}
+
+// creates an object-markList with subjects as keys and lowest scores as values
+const lowScoresOfEachSub = () =>{
+
+    let markList = fetchSubs()
+    for(key in markList)
+    markList[key] = 100
+
+    students.forEach((student) => {
+        student.marks.forEach((detail)=>{
+            detail.mark < markList[detail.subject] ? markList[detail.subject] = detail.mark : ''
+        })
+    })
+    return markList
+}
+
+const toppersOfSubs = () =>{
+
+    markList = topScoresOfEachSub()
+    // find and print each students whose marks and subject matches with the markList
+    students.forEach((student) => {
+        found = student.marks.find(detail => {
+            if(detail.mark == markList[detail.subject] && detail.subject in markList)
+            return true
+        })
+        found && console.log(student.name) 
+    })
+}
+
+const lowersOfSubs = () =>{
+
+    markList = lowScoresOfEachSub()
+    // find and print each students whose marks and subject matches with the markList
+    students.forEach((student) => {
+        found = student.marks.find(detail => {
+            if(detail.mark == markList[detail.subject] && detail.subject in markList)
+            return true
+        })
+        found && console.log(student.name) 
+    })
+}
+
+const topScorersOfEachSub = () =>{
+
+    markList = topScoresOfEachSub()
+
+    for(key in markList)
+    {
+        students.forEach((student) => {
+            found = student.marks.find(details => details.mark == markList[key] && details.subject == key)
+            found && console.log(key,student.name)
+        })    
+    }
+}
+
+const lowScorersOfEachSub = () =>{
+
+    markList = lowScoresOfEachSub()
+
+    for(key in markList)
+    {
+        students.forEach((student) => {
+            found = student.marks.find(details => details.mark == markList[key] && details.subject == key)
+            found && console.log(key,student.name)
+        })    
+    }
+}
+// average marks of students is subject m,ust be greater
 //printAll()
 // const test = ()=>{
 //     students.forEach(student=>{
@@ -600,4 +775,15 @@ const studentsWithLowestPercentIn = (sub) =>{
 // subjectsWithLowestPercent()
 //studentsWithHighestPercentIn("Maths")
 //studentsWithLowestPercentIn("English")
+// highestPercentageOf(102)
+// lowestPercentageOf(102)
+// subjectsScoredAbove(18)
+// subjectsScoredBelow(50)
+//averageMarksOfSubsAbove(35)
+//averageMarksOfSubsBelow(35)
+// toppersOfSubs()
+// lowersOfSubs()
+// leaving 49 & 50
+//topScorersOfEachSub()
+//lowScorersOfEachSub()
 //
