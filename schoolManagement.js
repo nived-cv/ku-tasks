@@ -412,6 +412,145 @@ const filterStudentsByUpperLimit = (min_score) => {
     console.log(`number of students scored below ${min_score} in all`,count)
 }
 
+const percentageOfStudentsAbove = (sub,mark) => {
+    let count = 0;
+    students.forEach((student)=>{
+        found = student.marks.find(details => details.subject == sub && details.mark > mark)
+        found ? count++ : ''
+    })
+    percentage = (count / students.length) * 100
+
+    console.log(`percentage scoring above ${mark} in ${sub}`,percentage)
+}
+
+const percentageOfStudentsBelow = (sub,mark) => {
+    let count = 0;
+    students.forEach((student)=>{
+        found = student.marks.find(details => details.subject == sub && details.mark < mark)
+        found ? count++ : ''
+    })
+    percentage = (count / students.length) * 100
+
+    console.log(`percentage scoring below ${mark} in ${sub}`,percentage)
+}
+
+const percentageOfStudentsAboveTotal = (mark) => {
+    let count = 0;
+    students.forEach((student) => {
+        found = student.marks.find((markDetails) => markDetails.mark < mark)
+        found ? '' : count++
+    })
+    percentage = (count / students.length) * 100
+
+    console.log(`percentage of students scored above ${mark} in all`,percentage)
+}
+
+const percentageOfStudentsBelowTotal = (mark) => {
+    let count = 0;
+    students.forEach((student) => {
+        found = student.marks.find((markDetails) => markDetails.mark > mark)
+        found ? '' : count++
+    })
+    percentage = (count / students.length) * 100
+
+    console.log(`percentage of students scored below ${mark} in all`,percentage)
+}
+
+const studentsWithHighPercent = () =>{
+    let studentList = []
+    let percentList = []
+    const maximumMark = 50
+
+    students.forEach((student) => {
+        let percentage = student.marks.reduce((total,value) => total += value.mark,0)
+        percentage = (percentage / (student.marks.length * maximumMark)) * 100
+        percentList.push(percentage)
+        studentList.push(student.name)
+    })
+    max_value = Math.max(...percentList)
+
+    for( let i = 0; i<percentList.length; i++)
+        percentList[i] == max_value && console.log(studentList[i])
+}
+
+const studentsWithLowPercent = () =>{
+    let studentList = []
+    let percentList = []
+    const maximumMark = 50
+
+    students.forEach((student) => {
+        let percentage = student.marks.reduce((total,value) => total += value.mark,0)
+        percentage = (percentage / (student.marks.length * maximumMark)) * 100
+        percentList.push(percentage)
+        studentList.push(student.name)
+    })
+    min_value = Math.min(...percentList)
+
+    for( let i = 0; i<percentList.length; i++)
+        percentList[i] == min_value && console.log(studentList[i])
+}
+
+const subjectsWithHighestPercent = () =>{
+    const maximumMark = 50
+    let percentList = Object.values(totalMarkOfSubs())
+    let subjectList = Object.keys(totalMarkOfSubs())
+    percentList.forEach((sub,idx) => percentList[idx] = (sub / (students.length * maximumMark)) * 100)
+    max_value = Math.max(...percentList)
+
+    for( let i = 0; i<percentList.length; i++)
+        percentList[i] == max_value && console.log(subjectList[i],max_value)
+}
+
+const subjectsWithLowestPercent = () =>{
+    const maximumMark = 50
+    let percentList = Object.values(totalMarkOfSubs())
+    let subjectList = Object.keys(totalMarkOfSubs())
+    percentList.forEach((sub,idx) => percentList[idx] = (sub / (students.length * maximumMark)) * 100)
+    min_value = Math.min(...percentList)
+
+    for( let i = 0; i<percentList.length; i++)
+        percentList[i] == min_value && console.log(subjectList[i],min_value)
+}
+
+const studentsWithHighestPercentIn = (sub) =>{
+    
+    let maximumMark = 50
+    let percentList = []
+    let studentList = []
+
+    students.forEach((student)=>{
+        percentage = student.marks.find(details => details.subject == sub).mark
+        percentage = (percentage / maximumMark) * 100
+        percentList.push(percentage)
+        studentList.push(student.name)
+    })
+    max_value = Math.max(...percentList)
+
+    for( let i =0; i<percentList.length; i++)
+        percentList[i] == max_value && console.log(studentList[i])
+}
+
+const studentsWithLowestPercentIn = (sub) =>{
+    
+    let maximumMark = 50
+    let percentList = []
+    let studentList = []
+
+    students.forEach((student)=>{
+        percentage = student.marks.find(details => details.subject == sub).mark
+        percentage = (percentage / maximumMark) * 100
+        percentList.push(percentage)
+        studentList.push(student.name)
+    })
+    min_value = Math.min(...percentList)
+
+    for( let i =0; i<percentList.length; i++)
+        percentList[i] == min_value && console.log(studentList[i])
+}
+
+
+
+//printAll()
 // const test = ()=>{
 //     students.forEach(student=>{
 //         console.log(Object.values(student.marks[0]))
@@ -451,4 +590,14 @@ const filterStudentsByUpperLimit = (min_score) => {
 // filterStudentsMaxLimit(30,"English")
 //filterStudentsByLowerLimit(30)
 //filterStudentsByUpperLimit(45)
+// percentageOfStudentsAbove("English",30)
+// percentageOfStudentsBelow("English",30)
+//percentageOfStudentsAboveTotal(30)
+//percentageOfStudentsBelowTotal(40)
+// studentsWithHighPercent()
+// studentsWithLowPercent()
+// subjectsWithHighestPercent()
+// subjectsWithLowestPercent()
+//studentsWithHighestPercentIn("Maths")
+//studentsWithLowestPercentIn("English")
 //
