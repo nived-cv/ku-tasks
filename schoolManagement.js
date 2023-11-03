@@ -250,8 +250,8 @@ const averageofClass = ()=>{
     students.forEach((student)=>{
         total += student.marks.reduce((total,value)=>total+=value.mark,0)
     })
-    avg = total / students.length
-    console.log(avg)
+    avg = total / (students.length * students[0].marks.length)
+    return avg
 }
 
 const totalofClass = ()=>{
@@ -268,7 +268,7 @@ const averageOfEachSub = () =>{
     for(sub in totalMarks)
     totalMarks[sub] = totalMarks[sub] / students.length
 
-    console.log(totalMarks)
+    return totalMarks
 }
 
 const topperSubject = ()=>{
@@ -421,6 +421,7 @@ const percentageOfStudentsAbove = (sub,mark) => {
     percentage = (count / students.length) * 100
 
     console.log(`percentage scoring above ${mark} in ${sub}`,percentage)
+    return percentage
 }
 
 const percentageOfStudentsBelow = (sub,mark) => {
@@ -432,6 +433,7 @@ const percentageOfStudentsBelow = (sub,mark) => {
     percentage = (count / students.length) * 100
 
     console.log(`percentage scoring below ${mark} in ${sub}`,percentage)
+    return percentage
 }
 
 const percentageOfStudentsAboveTotal = (mark) => {
@@ -548,9 +550,233 @@ const studentsWithLowestPercentIn = (sub) =>{
         percentList[i] == min_value && console.log(studentList[i])
 }
 
+// friday
+
+const fetchSubs = () =>{
+    let subs = {}
+    students[0].marks.forEach((sub) => subs[sub.subject] = 0)
+    return subs
+}
+
+const topScoresOfEachSub = () =>{
+
+    let markList = fetchSubs()
+     students.forEach((student) => {
+         student.marks.forEach((detail)=>{
+             detail.mark > markList[detail.subject] ? markList[detail.subject] = detail.mark : ''
+         })
+     })
+     return markList
+}
+
+const lowScoresOfEachSub = () =>{
+
+    let markList = fetchSubs()
+    for(key in markList)
+    markList[key] = 100
+
+    students.forEach((student) => {
+        student.marks.forEach((detail)=>{
+            detail.mark < markList[detail.subject] ? markList[detail.subject] = detail.mark : ''
+        })
+    })
+    return markList
+}
+
+const topScorersOfEachSub = () =>{
+
+    markList = topScoresOfEachSub()
+
+    for(key in markList)
+    {
+        students.forEach((student) => {
+            found = student.marks.find(details => details.mark == markList[key] && details.subject == key)
+            found && console.log(key,student.name)
+        })    
+    }
+}
+
+const lowScorersOfEachSub = () =>{
+
+    markList = lowScoresOfEachSub()
+
+    for(key in markList)
+    {
+        students.forEach((student) => {
+            found = student.marks.find(details => details.mark == markList[key] && details.subject == key)
+            found && console.log(key,student.name)
+        })    
+    }
+}
+
+// new problems
+const subjectsWithHighestScores = () =>{
+
+    const markList = topScoresOfEachSub()
+    maxValue = Math.max(...Object.values(markList))
+    
+    for(key in markList)
+    maxValue == markList[key] && console.log(key)
+}
+
+const subjectsWithLowestScores = () =>{
+
+    const markList = lowScoresOfEachSub()
+    minValue = Math.min(...Object.values(markList))
+    
+    for(key in markList)
+    minValue == markList[key] && console.log(key)
+}
+
+const studentsScoringAboveAverage = () =>{
+    const classAverage = averageofClass()
+    students.forEach(student => {
+        studentTotal = student.marks.reduce((total,value) => total += value.mark , 0)
+        studentTotal > classAverage && console.log(student.name)
+    })
+}
+
+const studentsScoringBelowAverage = () =>{
+    const classAverage = averageofClass()
+    students.forEach(student => {
+        studentTotal = student.marks.reduce((total,value) => total += value.mark , 0)
+        studentTotal < classAverage && console.log(student.name)
+    })
+}
+
+const subjectsAboveAverage = () =>{
+
+    let markList = averageOfEachSub()
+    const average = averageofClass()
+
+    for(key in markList)
+    markList[key] > average && console.log(key)
+}
+
+const subjectsBelowAverage = () =>{
+
+    let markList = averageOfEachSub()
+    const average = averageofClass()
+
+    for(key in markList)
+    markList[key] < average && console.log(key)
+}
+
+const subWithStudentsAbove = (mark_limit) =>{
+    
+    setPercentage = fetchSubs()
+
+    for(key in setPercentage)
+    setPercentage[key] = percentageOfStudentsAbove(key,mark_limit)
+
+    max_value = Math.max(...Object.values(setPercentage))
+    for( key in setPercentage)
+    setPercentage[key] == max_value && console.log("\nhighest percentage of students in ",key)
+}
+
+const subWithStudentsBelow = (mark_limit) =>{
+    
+    setPercentage = fetchSubs()
+
+    for(key in setPercentage)
+    setPercentage[key] = percentageOfStudentsBelow(key,mark_limit)
+
+    max_value = Math.max(...Object.values(setPercentage))
+    for( key in setPercentage)
+    setPercentage[key] == max_value && console.log("\nhighest percentage of students in ",key)
+}
+
+const leastSubWithStudentsAbove = (mark_limit) =>{
+    
+    setPercentage = fetchSubs()
+
+    for(key in setPercentage)
+    setPercentage[key] = percentageOfStudentsAbove(key,mark_limit)
+
+    min_value = Math.min(...Object.values(setPercentage))
+    for( key in setPercentage)
+    setPercentage[key] == min_value && console.log("\nlowest percentage of students in ",key)
+}
+
+const leastSubWithStudentsBelow = (mark_limit) =>{
+    
+    setPercentage = fetchSubs()
+
+    for(key in setPercentage)
+    setPercentage[key] = percentageOfStudentsBelow(key,mark_limit)
+
+    min_value = Math.min(...Object.values(setPercentage))
+    for( key in setPercentage)
+    setPercentage[key] == min_value && console.log("\nlowest percentage of students in ",key)
+}
+
+// percentage of students scoring above class average in each subject    
+//percentageOfStudentsAboveTotal(averageofClass())
+
+// percentage of students scoring below class average in each subject    
+//percentageOfStudentsBelowTotal(averageofClass())
+
+const percentOfStudentsAboveAverage = () => {
+    
+    const classAverage = averageofClass()
+    setCount = fetchSubs()
+    let percent = 0;
+
+    for(key in setCount){
+        temp_value = percentageOfStudentsAbove(key,classAverage) 
+        temp_value > percent ? percent = temp_value : ''
+    }
+
+    console.log("\n percent of students scoring above average in atleats 1 ",percent)
+}
+
+const percentOfStudentsBelowAverage = () => {
+    
+    const classAverage = averageofClass()
+    setCount = fetchSubs()
+    let percent = 0;
+
+    for(key in setCount){
+        temp_value = percentageOfStudentsBelow(key,classAverage) 
+        temp_value > percent ? percent = temp_value : ''
+    }
+
+    console.log("\n percent of students scoring below average in atleats 1 ",percent)
+}
+
+const studentsAveragingAboveInMost = () =>{
+
+    majority_factor = students[0].marks.length / 2
+    averageMark = averageofClass()
+
+    students.forEach((student) => {
+        
+        res_array = student.marks.filter((detail) => detail.mark >= averageMark)
+        res_array.length >= majority_factor && console.log(student.name)
+    })
+}
+
+const studentsAveragingBelowInMost = () =>{
+
+    majority_factor = students[0].marks.length / 2
+    averageMark = averageofClass()
+
+    students.forEach((student) => {
+        
+        res_array = student.marks.filter((detail) => detail.mark <= averageMark)
+        res_array.length >= majority_factor && console.log(student.name)
+    })
+}
+
+// students who scored above class average in all subjects
+//filterStudentsByLowerLimit(averageofClass())
+
+// students who scored below class average in all subjects
+//filterStudentsByUpperLimit(averageofClass())
 
 
-//printAll()
+
+// printAll()
 // const test = ()=>{
 //     students.forEach(student=>{
 //         console.log(Object.values(student.marks[0]))
@@ -576,9 +802,9 @@ const studentsWithLowestPercentIn = (sub) =>{
 //low_scorer()
 // subjectWithHighAvg()
 // subjectWithLowAvg()
-// averageofClass()
+// console.log(averageofClass())
 // totalofClass()
-// averageOfEachSub()
+// console.log(averageOfEachSub())
 // console.log(totalMarkOfSubs())
 //topperSubject()
 //lowerSubject()
@@ -600,3 +826,17 @@ const studentsWithLowestPercentIn = (sub) =>{
 // subjectsWithLowestPercent()
 //studentsWithHighestPercentIn("Maths")
 //studentsWithLowestPercentIn("English")
+//subjectsWithHighestScores()
+//subjectsWithLowestScores()
+//studentsScoringAboveAverage()
+//studentsScoringBelowAverage()
+// subjectsAboveAverage()
+// subjectsBelowAverage()
+// subWithStudentsAbove(20)
+// subWithStudentsBelow(30)
+//leastSubWithStudentsAbove(30)
+//leastSubWithStudentsBelow(30)
+//percentOfStudentsAboveAverage()
+//percentOfStudentsBelowAverage()
+//studentsAveragingAboveInMost()
+studentsAveragingBelowInMost()
