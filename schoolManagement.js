@@ -600,4 +600,3 @@ const studentsWithLowestPercentIn = (sub) =>{
 // subjectsWithLowestPercent()
 //studentsWithHighestPercentIn("Maths")
 //studentsWithLowestPercentIn("English")
-//
